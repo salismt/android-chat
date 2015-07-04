@@ -58,7 +58,6 @@ public class ListUsersActivity extends Activity {
                 } else {
 
                     Toast.makeText(getApplicationContext(), "Error loading user list", Toast.LENGTH_LONG).show();
-
                 }
             }
         });
@@ -73,6 +72,7 @@ public class ListUsersActivity extends Activity {
             public void done(List<ParseUser> list, ParseException e) {
                 if(e == null){
                     //start the messaging activity
+
                 } else {
                     Toast.makeText(getApplicationContext(), "Error finding that user", Toast.LENGTH_SHORT).show();
                 }
