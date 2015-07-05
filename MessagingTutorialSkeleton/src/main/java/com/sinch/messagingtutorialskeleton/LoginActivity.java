@@ -25,7 +25,7 @@ public class LoginActivity extends Activity {
         //Enable Local Datastore.
         Parse.enableLocalDatastore(this);
 
-        Parse.initialize(this, "APP ID", "Client Key");
+        Parse.initialize(this, "GNsyBu7UWQ8qRkj5Xg0LhAydJ4QIVFafD5s0EOz0", "2YAQJ9GmIKtg2YuxB5UhcjiRHSjr6CE7pS3cyfYw");
 
 
         Button loginButton;

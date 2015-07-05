@@ -25,6 +25,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.sinch.messagingtutorialskeleton.ListUsersActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <service android:name="com.sinch.messagingtutorialskeleton.MessageService"/>
     </application>
 
 </manifest>
