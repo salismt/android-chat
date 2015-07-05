@@ -38,10 +38,10 @@
                 android:textSize="14sp"
                 android:textColor="@android:color/black"
                 android:layout_marginRight="10dp"
-                android:layout_alignTop="@+id/btnSend"
+                android:layout_alignTop="@+id/sendButton"
                 android:background="@android:color/white"
-                android:layout_alignBottom="@+id/btnSend"
-                android:layout_toLeftOf="@+id/btnSend"/>
+                android:layout_alignBottom="@+id/sendButton"
+                android:layout_toLeftOf="@+id/sendButton"/>
 
         <Button
                 android:id="@+id/sendButton"

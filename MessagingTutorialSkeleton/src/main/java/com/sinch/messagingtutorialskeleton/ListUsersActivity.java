@@ -99,12 +99,16 @@ public class ListUsersActivity extends Activity {
         query.whereEqualTo("username", names.get(pos));
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
-            public void done(List<ParseUser> list, ParseException e) {
+            public void done(List<ParseUser> user, ParseException e) {
                 if(e == null){
                     //start the messaging activity
-
+                    Intent intent = new Intent(getApplicationContext(), MessagingActivity.class);
+                    intent.putExtra("RECIPIENT_ID", user.get(0).getObjectId());
+                    startActivity(intent);
                 } else {
-                    Toast.makeText(getApplicationContext(), "Error finding that user", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),
+                            "Error finding that user",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
