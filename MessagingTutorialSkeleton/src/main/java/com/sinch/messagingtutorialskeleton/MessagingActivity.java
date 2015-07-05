@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.messagingtutorialskeleton.R;
@@ -18,6 +19,7 @@ import com.sinch.android.rtc.messaging.MessageClient;
 import com.sinch.android.rtc.messaging.MessageClientListener;
 import com.sinch.android.rtc.messaging.MessageDeliveryInfo;
 import com.sinch.android.rtc.messaging.MessageFailureInfo;
+import com.sinch.android.rtc.messaging.WritableMessage;
 
 import java.util.List;
 
@@ -32,6 +34,13 @@ public class MessagingActivity extends Activity {
     private MessageService.MessageServiceInterface messageService;
     private String currentUserId;
     private ServiceConnection serviceConnection = new MyServiceConnection();
+
+    //message client listener attributes
+    private MessageClientListener messageClientListener = new MyMessageClientListener();
+
+    // custom list adapter for message.xml
+    ListView messagesList = (ListView) findViewById(R.id.listMessages);
+    MessageAdapter messageAdapter = new MessageAdapter(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +73,9 @@ public class MessagingActivity extends Activity {
                 messageBodyField.setText("");
             }
         });
+
+        //display messages custom adapter for message.xml
+        messagesList.setAdapter(messageAdapter);
     }
 
     //unbind the service when the activity is destroyed
@@ -106,12 +118,20 @@ public class MessagingActivity extends Activity {
 
         @Override
         public void onIncomingMessage(MessageClient client, Message message) {
-            //Display an incoming message
+            //Display the message as an incoming message
+            if (message.getSenderId().equals(recipientId)) {
+                WritableMessage writableMessage = new WritableMessage(message.getRecipientIds()
+                .get(0), message.getTextBody());
+                messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING);
+            }
         }
 
         @Override
         public void onMessageSent(MessageClient client, Message message, String recipientId) {
             //Display the message that was just sent
+            WritableMessage writableMessage = new WritableMessage(message.getRecipientIds()
+            .get(0), message.getTextBody());
+            messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
 
             //Later, I'll show you how to store the message in Parse
             //So you can retrieve and display them everytime the conversation is opened
