@@ -162,6 +162,7 @@ public class MessageService extends Service implements SinchClientListener {
             return MessageService.this.isSinchClientStarted();
         }
 
+
     }
 
 
