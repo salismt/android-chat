@@ -12,6 +12,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.messagingtutorialskeleton.R;
+import com.parse.FindCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.sinch.android.rtc.PushPair;
 import com.sinch.android.rtc.messaging.Message;
@@ -21,6 +26,7 @@ import com.sinch.android.rtc.messaging.MessageDeliveryInfo;
 import com.sinch.android.rtc.messaging.MessageFailureInfo;
 import com.sinch.android.rtc.messaging.WritableMessage;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -76,6 +82,31 @@ public class MessagingActivity extends Activity {
 
         //display messages custom adapter for message.xml
         messagesList.setAdapter(messageAdapter);
+
+        //finds all ParseMessages sent between user and recipient of current conversation
+        String[] userIds = {currentUserId, recipientId};
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
+        query.whereContainedIn("senderId", Arrays.asList(userIds));
+        query.whereContainedIn("recipientId", Arrays.asList(userIds));
+        query.orderByAscending("createdAt");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> messageList, com.parse.ParseException e) {
+                if (e == null) {
+                    for (int i = 0; i < messageList.size(); i++) {
+                        WritableMessage message = new WritableMessage(messageList.get(i)
+                        .get("recipientId").toString(), messageList.get(i).get("messageText").toString());
+
+                        if (messageList.get(i).get("senderId").toString().equals(currentUserId)) {
+                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING);
+                        } else {
+                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING);
+                        }
+
+                    }
+                }
+            }
+        });
     }
 
     //unbind the service when the activity is destroyed
@@ -129,12 +160,36 @@ public class MessagingActivity extends Activity {
         @Override
         public void onMessageSent(MessageClient client, Message message, String recipientId) {
             //Display the message that was just sent
-            WritableMessage writableMessage = new WritableMessage(message.getRecipientIds()
+            final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds()
             .get(0), message.getTextBody());
             messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
 
             //Later, I'll show you how to store the message in Parse
             //So you can retrieve and display them everytime the conversation is opened
+            //only add message to parse database if it doesn't already exist there
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
+            query.whereNotEqualTo("sinchId", message.getMessageId());
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> messageList, ParseException e) {
+                    if (e == null) {
+                        if (messageList.size() == 0) {
+                            ParseObject parseMessage = new ParseObject("ParseMessage");
+
+                            parseMessage.put("senderId", currentUserId);
+                            parseMessage.put("recipientId", writableMessage.getRecipientIds()
+                            .get(0));
+                            parseMessage.put("messageText", writableMessage.getTextBody());
+                            parseMessage.put("sinchId", writableMessage.getMessageId());
+
+                            parseMessage.saveInBackground();
+
+                            messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
+                        }
+                    }
+                }
+            });
+
         }
 
         //Do you want to notify your user when the message is delivered?
