@@ -12,6 +12,14 @@ import android.widget.Toast;
 
 import com.example.messagingtutorialskeleton.R;
 import com.parse.ParseUser;
+import com.sinch.android.rtc.PushPair;
+import com.sinch.android.rtc.messaging.Message;
+import com.sinch.android.rtc.messaging.MessageClient;
+import com.sinch.android.rtc.messaging.MessageClientListener;
+import com.sinch.android.rtc.messaging.MessageDeliveryInfo;
+import com.sinch.android.rtc.messaging.MessageFailureInfo;
+
+import java.util.List;
 
 /**
  * Created by mtsalis31 on 05-Jul-15.
@@ -63,17 +71,63 @@ public class MessagingActivity extends Activity {
     public void onDestroy() {
         unbindService(serviceConnection);
         super.onDestroy();
+
+        // remove listener
+        messageService.removeMessageClientListener(messageClientListener);
     }
 
     private class MyServiceConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             messageService = (MessageService.MessageServiceInterface) iBinder;
+
+            //message center listener
+            messageService.addMessageClientListener(messageClientListener);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             messageService = null;
+        }
+
+    }
+
+    // Message Center Listener: to listen incoming messages and messages that failed to send
+    private class MyMessageClientListener implements MessageClientListener {
+
+        //Notify the user if their message failed to send
+        @Override
+        public void onMessageFailed(MessageClient client, Message message,
+                                    MessageFailureInfo failureInfo) {
+            Toast.makeText(MessagingActivity.this, "Message failed to send",
+                    Toast.LENGTH_LONG).show();
+
+        }
+
+        @Override
+        public void onIncomingMessage(MessageClient client, Message message) {
+            //Display an incoming message
+        }
+
+        @Override
+        public void onMessageSent(MessageClient client, Message message, String recipientId) {
+            //Display the message that was just sent
+
+            //Later, I'll show you how to store the message in Parse
+            //So you can retrieve and display them everytime the conversation is opened
+        }
+
+        //Do you want to notify your user when the message is delivered?
+        @Override
+        public void onMessageDelivered(MessageClient client, MessageDeliveryInfo deliveryInfo) {
+
+        }
+
+        //Don't worry about this right now
+        @Override
+        public void onShouldSendPushData(MessageClient client, Message message,
+                                         List<PushPair> pushPairs) {
+
         }
 
     }
