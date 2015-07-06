@@ -20,7 +20,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.parse.bolts:bolts-android:1.+'
     compile fileTree(include: 'Parse-*.jar', dir: 'libs')
     compile files('C:/Users/mtsalis31/workspace/android-messaging-tutorial-skeleton-master/libs/sinch-android-rtc-3.6.1.jar')

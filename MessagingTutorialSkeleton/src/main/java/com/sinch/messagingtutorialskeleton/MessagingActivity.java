@@ -38,15 +38,13 @@ public class MessagingActivity extends Activity {
     private EditText messageBodyField;
     private String messageBody;
     private MessageService.MessageServiceInterface messageService;
+    private MessageAdapter messageAdapter;
+    private ListView messagesList;
     private String currentUserId;
     private ServiceConnection serviceConnection = new MyServiceConnection();
 
     //message client listener attributes
     private MessageClientListener messageClientListener = new MyMessageClientListener();
-
-    // custom list adapter for message.xml
-    ListView messagesList = (ListView) findViewById(R.id.listMessages);
-    MessageAdapter messageAdapter = new MessageAdapter(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +60,8 @@ public class MessagingActivity extends Activity {
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         messageBodyField = (EditText) findViewById(R.id.messageBodyField);
+
+
 
         //listen for a click on the send button
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
@@ -80,6 +80,9 @@ public class MessagingActivity extends Activity {
             }
         });
 
+        // custom list adapter for message xml
+        messagesList = (ListView) findViewById(R.id.listMessages);
+        messageAdapter = new MessageAdapter(this);
         //display messages custom adapter for message.xml
         messagesList.setAdapter(messageAdapter);
 
