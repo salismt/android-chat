@@ -1,6 +1,6 @@
 package com.sinch.messagingtutorialskeleton;
 
-import android.app.Activity;
+import android.app.Application;
 import android.os.Bundle;
 
 import com.parse.Parse;
@@ -8,11 +8,11 @@ import com.parse.Parse;
 /**
  * Created by mtsalis31 on 06-Jul-15.
  */
-public class MyApplication extends Activity {
+public class MyApplication extends Application {
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
+    public void onCreate(){
+        super.onCreate();
 
         //Enable Local Datastore.
         Parse.enableLocalDatastore(this);
