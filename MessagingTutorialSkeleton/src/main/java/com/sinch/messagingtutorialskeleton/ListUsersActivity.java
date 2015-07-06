@@ -47,7 +47,7 @@ public class ListUsersActivity extends Activity {
                 if (e == null) {
                     for (int i = 0; i < userList.size(); i++) {
 
-                        names.add(userList.get(1).getUsername().toString());
+                        names.add(userList.get(i).getUsername().toString());
 
                     }
 
