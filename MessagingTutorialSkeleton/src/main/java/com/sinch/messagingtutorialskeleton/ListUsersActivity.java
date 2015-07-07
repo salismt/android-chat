@@ -41,6 +41,7 @@ public class ListUsersActivity extends Activity {
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         //don't include yourself
         query.whereNotEqualTo("objectId", currentUserId);
+        //display available users in listview.xml
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> userList, ParseException e) {
