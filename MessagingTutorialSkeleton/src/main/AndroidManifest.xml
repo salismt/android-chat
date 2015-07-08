@@ -31,7 +31,8 @@
             android:screenOrientation="portrait" >
         </activity>
         <service android:name="com.sinch.messagingtutorialskeleton.MessageService"/>
-        <activity android:name="com.sinch.messagingtutorialskeleton.MessagingActivity"/>
+        <activity android:name="com.sinch.messagingtutorialskeleton.MessagingActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -58,6 +58,12 @@ public class MessageAdapter extends BaseAdapter{
     }
 
     @Override
+    public int getItemViewType(int i) {
+        return messages.get(i).second;
+    }
+
+
+    @Override
     public View getView(int i, View convertView, ViewGroup viewGroup) {
         int direction = getItemViewType(i);
 
